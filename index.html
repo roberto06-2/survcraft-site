@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SURV CRAFT - Servidor Oficial</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0a0015,#14002b,#1f003d);
+color:white;
+overflow-x:hidden;
+}
+
+/* PARTICULAS */
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-2;
+}
+
+/* FUNDO RGB */
+body::before{
+content:"";
+position:fixed;
+width:100%;
+height:100%;
+background:linear-gradient(270deg,#ff00ff,#8a2be2,#00ffff,#ff00ff);
+background-size:800% 800%;
+animation:bgRGB 20s infinite linear;
+opacity:0.15;
+z-index:-1;
+}
+
+@keyframes bgRGB{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* LOGO RGB */
+.rgb-logo{
+font-family:Orbitron;
+font-size:60px;
+animation:rgbText 5s infinite linear;
+text-shadow:0 0 25px currentColor;
+}
+
+@keyframes rgbText{
+0%{color:#ff0000;}
+25%{color:#00ff00;}
+50%{color:#00ffff;}
+75%{color:#ff00ff;}
+100%{color:#ff0000;}
+}
+
+header{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+background:radial-gradient(circle at center,#2a0050,#0a0015);
+}
+
+.hero p{
+margin-top:15px;
+font-size:20px;
+opacity:0.9;
+}
+
+.buttons{
+margin-top:30px;
+}
+
+.btn{
+display:inline-block;
+padding:15px 30px;
+margin:10px;
+border-radius:8px;
+text-decoration:none;
+font-weight:600;
+transition:0.3s;
+cursor:pointer;
+}
+
+.btn-primary{
+background:linear-gradient(45deg,#8a2be2,#ff00ff);
+color:white;
+}
+
+.btn-primary:hover{
+transform:scale(1.1);
+box-shadow:0 0 25px #ff00ff;
+}
+
+.btn-secondary{
+border:2px solid #ff00ff;
+color:white;
+}
+
+.btn-secondary:hover{
+background:#ff00ff;
+}
+
+section{
+padding:80px 20px;
+text-align:center;
+}
+
+.title{
+font-size:40px;
+margin-bottom:40px;
+font-family:Orbitron;
+}
+
+.cards{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:20px;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+padding:30px;
+border-radius:12px;
+width:250px;
+transition:0.3s;
+border:1px solid rgba(255,255,255,0.1);
+box-shadow:0 0 20px rgba(255,0,255,0.2);
+}
+
+.card:hover{
+transform:translateY(-10px);
+}
+
+.stats{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:30px;
+}
+
+.stat{
+font-size:30px;
+}
+
+.join-box{
+background:rgba(255,0,255,0.1);
+backdrop-filter:blur(15px);
+padding:40px;
+border-radius:15px;
+display:inline-block;
+box-shadow:0 0 25px rgba(255,0,255,0.3);
+}
+
+.ip{
+font-size:25px;
+margin:20px 0;
+font-family:Orbitron;
+color:#ffcc00;
+}
+
+.status{
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.online-status{
+color:#00ff00;
+}
+
+.offline-status{
+color:#ff0000;
+}
+
+.copy-btn{
+background:#00ffff;
+color:black;
+padding:10px 20px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin-top:10px;
+}
+
+.copy-btn:hover{
+background:#00cccc;
+}
+
+footer{
+padding:30px;
+background:#05000a;
+opacity:0.8;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="hero">
+<h1 class="rgb-logo">SURV CRAFT</h1>
+<p>Servidor Survival Anárquico Oficial</p>
+
+<div class="buttons">
+<a onclick="abrirMinecraft()" class="btn btn-primary">
+Entrar no Servidor
+</a>
+
+<a href="https://chat.whatsapp.com/Ifmfcd2AmkI9U2hqXlNa0k" class="btn btn-secondary">
+Entrar no Grupo
+</a>
+</div>
+</div>
+</header>
+
+<section>
+<h2 class="title">Estatísticas</h2>
+
+<div class="stats">
+<div class="stat">
+<b id="onlinePlayers">...</b><br>
+Jogadores Online
+</div>
+
+<div class="stat">
+<b id="ping">...</b><br>
+Ping
+</div>
+</div>
+</section>
+
+<section>
+<h2 class="title">Entrar no Servidor</h2>
+
+<div class="join-box">
+
+<div id="serverStatus" class="status">
+Carregando status...
+</div>
+
+<div>
+Online agora: <span id="onlineNow">Carregando...</span>
+</div>
+
+<div class="ip">
+IP: survcraft.bed.net.br
+</div>
+
+<div class="ip">
+Porta: 14352
+</div>
+
+<button class="copy-btn" onclick="copiarIP()">
+Copiar IP e Porta
+</button>
+
+<br><br>
+
+<a onclick="abrirMinecraft()" class="btn btn-primary">
+Abrir Minecraft
+</a>
+
+</div>
+</section>
+
+<footer>
+SURV CRAFT © 2026  
+Todos os direitos reservados
+</footer>
+
+<script>
+
+/* PARTICULAS */
+const canvas=document.createElement("canvas");
+document.body.appendChild(canvas);
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+for(let i=0;i<60;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+size:Math.random()*2,
+speed:Math.random()*0.5
+});
+}
+
+function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="#ff00ff";
+particles.forEach(p=>{
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+ctx.fill();
+p.y-=p.speed;
+if(p.y<0)p.y=canvas.height;
+});
+requestAnimationFrame(animate);
+}
+animate();
+
+/* COPIAR IP */
+function copiarIP(){
+navigator.clipboard.writeText("survcraft.bed.net.br:14352");
+alert("IP copiado!");
+}
+
+/* ABRIR MINECRAFT */
+function abrirMinecraft(){
+window.location.href="minecraft://?addExternalServer=SurvCraft|survcraft.bed.net.br:14352";
+}
+
+/* STATUS + PING */
+async function atualizar(){
+const start=Date.now();
+try{
+let res=await fetch("https://api.mcsrvstat.us/bedrock/3/survcraft.bed.net.br:14352");
+let data=await res.json();
+const ping=Date.now()-start;
+document.getElementById("ping").innerText=ping+" ms";
+
+if(data.online){
+document.getElementById("onlinePlayers").innerText=data.players.online;
+document.getElementById("onlineNow").innerText=data.players.online+" jogadores";
+document.getElementById("serverStatus").innerText="Servidor Online";
+document.getElementById("serverStatus").className="status online-status";
+}else{
+document.getElementById("serverStatus").innerText="Servidor Offline";
+document.getElementById("serverStatus").className="status offline-status";
+}
+}catch{
+document.getElementById("serverStatus").innerText="Erro conexão";
+}
+}
+
+setInterval(atualizar,5000);
+atualizar();
+
+</script>
+
+</body>
+</html>
